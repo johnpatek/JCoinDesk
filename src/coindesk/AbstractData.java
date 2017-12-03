@@ -2,7 +2,6 @@ package coindesk;
 
 import coindesk.historical.HistoricalData;
 import coindesk.realtime.RealTimeData;
-import coindesk.CoinDeskException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
