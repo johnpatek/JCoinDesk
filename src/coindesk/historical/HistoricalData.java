@@ -1,6 +1,7 @@
 package coindesk.historical;
 
 import coindesk.AbstractData;
+import coindesk.CoinDeskException;
 import java.time.LocalDate;
 
 /**
@@ -24,40 +25,40 @@ public class HistoricalData extends AbstractData {
     }
 
     @Override
-    public String getPrice() {
-        return getBPI(HISTORICAL_ENDPOINT);
+    public void getBPI() throws CoinDeskException{
+        getBPI(HISTORICAL_ENDPOINT);
     }
 
-    @Override
-    public String getPrice(String currency) {
-        return getPrice(currency, USD_INDEX);
+    public void getBPI(String currency) throws CoinDeskException{
+        getBPI(currency, USD_INDEX);
     }
 
-    public String getPrice(String currency, String index) {
-        return getBPI(String.format("%s?currency=%s&index=%s", HISTORICAL_ENDPOINT, currency, index));
+    public void getBPI(String currency, String index) throws CoinDeskException{
+        getBPI(String.format("%s?currency=%s&index=%s", HISTORICAL_ENDPOINT, currency, index));
     }
 
-    public String getPrice(LocalDate start, LocalDate end) {
-        return getPrice(start, end, "USD", USD_INDEX);
+    public void getBPI(LocalDate start, LocalDate end) throws CoinDeskException{
+        getBPI(start, end, "USD", USD_INDEX);
     }
     
-    public String getPrice(LocalDate start, LocalDate end, String currency) {
-        return getPrice(start, end, currency, USD_INDEX);
+    public void getBPI(LocalDate start, LocalDate end, String currency) throws CoinDeskException{
+        getBPI(start, end, currency, USD_INDEX);
     }
 
-    public String getPrice(LocalDate start, LocalDate end, String currency, String index) {
-        return getBPI(String.format("%s?start=%s&end=%s&currency=%s&index=%s", HISTORICAL_ENDPOINT, start, end, currency, index));
+    public void getBPI(LocalDate start, LocalDate end, String currency, String index) throws CoinDeskException{
+        getBPI(String.format("%s?start=%s&end=%s&currency=%s&index=%s", HISTORICAL_ENDPOINT, start, end, currency, index));
     }
 
-    public String getPriceForYesterday() {
-        return getPriceForYesterday("USD", USD_INDEX);
+    public void getBPIForYesterday() throws CoinDeskException{
+        getBPIForYesterday("USD", USD_INDEX);
     }
     
-    public String getPriceForYesterday(String currency) {
-        return getPriceForYesterday(currency, USD_INDEX);
+    public void getBPIForYesterday(String currency) throws CoinDeskException{
+        getBPIForYesterday(currency, USD_INDEX);
     }
 
-    public String getPriceForYesterday(String currency, String index) {
-        return getBPI(String.format("%s?for=yesterday&currency=%s&index=%s", HISTORICAL_ENDPOINT, currency, index));
+    public void getBPIForYesterday(String currency, String index) throws CoinDeskException{
+        
+        mUrl = new URL(String.format("%s?for=yesterday&currency=%s&index=%s", HISTORICAL_ENDPOINT, currency, index));
     }
 }

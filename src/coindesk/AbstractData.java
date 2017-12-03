@@ -2,6 +2,7 @@ package coindesk;
 
 import coindesk.historical.HistoricalData;
 import coindesk.realtime.RealTimeData;
+import coindesk.CoinDeskException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,10 +25,11 @@ public abstract class AbstractData implements CoinDeskData {
 
     public static final int DEFAULT_BUFFER_SIZE = 1024;
 
-    private URL mUrl;
     private HttpURLConnection mConnection;
     private BufferedReader mResponseReader;
     private final StringBuilder mStringBuilder;
+    
+    protected URL mURL;
 
     /**
      * Creates a CoinDesk client object that uses a default-sized string
@@ -46,29 +48,24 @@ public abstract class AbstractData implements CoinDeskData {
     protected AbstractData(int initialCapacity) {
         mStringBuilder = new StringBuilder(initialCapacity);
     }
-
+        
     /**
-     * @param endpoint a String representing a valid CoinDesk API call
-     * @return the resulting BPI data from the given endpoint, in JSON format.
-     * Returns an error message otherwise.
+     * @param url a URL representing a valid CoinDesk API call
+     * @throws coindesk.CoinDeskException
      */
-    public String getBPI(String endpoint) {
+    protected void getBPI(URL url) throws CoinDeskException{
         String line;
         try {
-            mUrl = new URL(endpoint);
-            mConnection = (HttpURLConnection) mUrl.openConnection();
+            mConnection = (HttpURLConnection) url.openConnection();
             mConnection.setRequestMethod("GET");//TODO: alternative
             mConnection.setReadTimeout(0);//TODO: alternative
             mResponseReader = new BufferedReader(new InputStreamReader(mConnection.getInputStream()));
             while ((line = mResponseReader.readLine()) != null) {//TODO: remove duct tape
                 mStringBuilder.append(line).append(NEWLINE);
             }
-        } catch (MalformedURLException malformedURLException) {
-            return malformedURLException.getMessage();
         } catch (IOException ioException) {
-            return ioException.getMessage();
+            throw new CoinDeskException(ioException.getMessage(),CoinDeskException.IO_ERROR);
         }
-        return mStringBuilder.toString();
     }
 
     /**
@@ -78,5 +75,11 @@ public abstract class AbstractData implements CoinDeskData {
      */
     public String getLastResponse() {
         return mStringBuilder.toString();
+    }
+    
+    @Override
+    public String toString()
+    {
+        return getLastResponse();
     }
 }

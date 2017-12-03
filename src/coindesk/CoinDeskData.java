@@ -26,14 +26,7 @@ public interface CoinDeskData {
 
     /**
      *
-     * @return the CoinDesk price data formatted as a JSON
+     * @throws coindesk.CoinDeskException
      */
-    String getPrice();
-
-    /**
-     *
-     * @param currencyCode 3 letter ISO 4217 currency code
-     * @return the CoinDesk price data for the specified currency
-     */
-    String getPrice(String currencyCode);
+    void getBPI() throws CoinDeskException;
 }
