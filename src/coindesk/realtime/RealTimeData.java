@@ -20,31 +20,17 @@ public class RealTimeData extends AbstractData {
      */
     public RealTimeData() throws CoinDeskException {
         super();
-        try {
-            mURL = new URL(REAL_TIME_ENDPOINT);
-        } catch (MalformedURLException malformedURLException) {
-            throw new CoinDeskException(malformedURLException.getMessage(), CoinDeskException.URL_ERROR);
-        }
+        super.setURL(REAL_TIME_ENDPOINT);
     }
 
     @Override
     public void getBPI() throws CoinDeskException {
-        if (mURL.toString().equals(REAL_TIME_ENDPOINT)) {
-            try {
-
-                mURL = new URL(REAL_TIME_ENDPOINT);
-            } catch (MalformedURLException malformedURLException) {
-                throw new CoinDeskException(malformedURLException.getMessage(), CoinDeskException.URL_ERROR);
-            }
-            getBPI(mURL);
-        }
+        super.setURL(REAL_TIME_ENDPOINT);
+        getBPI(getURL());
     }
 
     public void getBPI(String currencyCode) throws CoinDeskException {
-        try {
-            mURL = new URL(REAL_TIME_ENDPOINT.replace(".json", String.format("/%s.json", currencyCode)));
-        } catch (MalformedURLException malformedURLException) {
-            throw new CoinDeskException(malformedURLException.getMessage(), CoinDeskException.URL_ERROR);
-        }
+        setURL(REAL_TIME_ENDPOINT.replace(".json", String.format("/%s.json", currencyCode)));
+        getBPI(getURL());
     }
 }

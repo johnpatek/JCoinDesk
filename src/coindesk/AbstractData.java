@@ -28,8 +28,8 @@ public abstract class AbstractData implements CoinDeskData {
     private HttpURLConnection mConnection;
     private BufferedReader mResponseReader;
     private final StringBuilder mStringBuilder;
-    
-    protected URL mURL;
+
+    private URL mURL;
 
     /**
      * Creates a CoinDesk client object that uses a default-sized string
@@ -48,12 +48,12 @@ public abstract class AbstractData implements CoinDeskData {
     protected AbstractData(int initialCapacity) {
         mStringBuilder = new StringBuilder(initialCapacity);
     }
-        
+
     /**
      * @param url a URL representing a valid CoinDesk API call
      * @throws coindesk.CoinDeskException
      */
-    protected void getBPI(URL url) throws CoinDeskException{
+    protected void getBPI(URL url) throws CoinDeskException {
         String line;
         try {
             mConnection = (HttpURLConnection) url.openConnection();
@@ -64,7 +64,7 @@ public abstract class AbstractData implements CoinDeskData {
                 mStringBuilder.append(line).append(NEWLINE);
             }
         } catch (IOException ioException) {
-            throw new CoinDeskException(ioException.getMessage(),CoinDeskException.IO_ERROR);
+            throw new CoinDeskException(ioException.getMessage(), CoinDeskException.IO_ERROR);
         }
     }
 
@@ -76,10 +76,23 @@ public abstract class AbstractData implements CoinDeskData {
     public String getLastResponse() {
         return mStringBuilder.toString();
     }
-    
+
+    protected URL getURL() {
+        return mURL;
+    }
+
+    protected void setURL(String urlString) throws CoinDeskException {
+        if (mURL == null || !urlString.equals(mURL.toString())) {
+            try {
+                mURL = new URL(urlString);
+            } catch (MalformedURLException malformedURLException) {
+                throw new CoinDeskException(malformedURLException.getMessage(), CoinDeskException.URL_ERROR);
+            }
+        }
+    }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return getLastResponse();
     }
 }
