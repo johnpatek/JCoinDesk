@@ -31,4 +31,6 @@ public interface CoinDeskData {
      * cannot be read from stream
      */
     void getBPI() throws CoinDeskException;
+    
+    String getLastResponse();
 }
